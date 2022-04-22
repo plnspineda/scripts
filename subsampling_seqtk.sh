@@ -28,18 +28,16 @@ done
 
 subreads=$((27000000*$coverage)) #compute for how much subreads are needed for x coverage (2.7Gb / 100bp per read)
 
-echo "Number of subreads: $subreads. Number of random of samples to be generated: $seeds. Sub-sampling will take a while..."
+echo "Number of subreads: $subreads. Number of random samples to be generated: $seeds. Sub-sampling will take a while..."
 
-$tmplist=$(mktemp)
-
-$tmplist = ls $dir > "$dir"_fq.list ## will list the files/folder in the directory
+ls $dir > "$dir"_fq.list ## will list the files/folder in the directory
 subrandom=$(($seeds*100)) ## just to make the the seeds an increment of 100
 for i in $(cat "$dir"_fq.list)
 do
-for ((a=100; a<=$subrandom; a+=100))
-do
- seqtk sample -s_$a $dir/$i $subreads > $dir/sub"$a"_"${i%.*}"
-done
+  for ((a=100; a<=$subrandom; a+=100))
+  do
+   seqtk sample -s_$a $dir/$i $subreads > $dir/sub"$a"_"${i%.*}"
+  done
 done
 
 echo "Finished."
